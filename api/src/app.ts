@@ -1,5 +1,5 @@
 import cors from "cors";
-import express from "express";
+import express, { Request, Response } from "express";
 import swaggerUi from "swagger-ui-express";
 import { env } from "./config/env.js";
 import { apiRateLimiter, securityMiddleware } from "./config/security.js";
@@ -23,7 +23,7 @@ export const createApp = () => {
   app.use(securityMiddleware);
   app.use(apiRateLimiter);
 
-  app.get("/health", (_req, res) => {
+  app.get("/health", (_req: Request, res: Response) => {
     res.json({ status: "ok" });
   });
 
@@ -35,7 +35,7 @@ export const createApp = () => {
 
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
-  app.use((req, res) => {
+  app.use((req: Request, res: Response) => {
     res.status(404).json({ status: "error", message: "Not found" });
   });
 

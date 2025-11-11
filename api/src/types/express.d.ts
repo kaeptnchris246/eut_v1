@@ -1,16 +1,16 @@
 declare module "express" {
-  export interface Request {
-    body: any;
-    params: Record<string, any>;
-    query: Record<string, any>;
-    headers: Record<string, any>;
+  export interface Request<Params = Record<string, any>, ResBody = any, ReqBody = any, ReqQuery = Record<string, any>> {
+    params: Params;
+    body: ReqBody;
+    query: ReqQuery;
+    headers: Record<string, any> & { authorization?: string };
     user?: any;
   }
 
-  export interface Response {
-    status(code: number): Response;
-    json(body: any): Response;
-    send(body?: any): Response;
+  export interface Response<ResBody = any> {
+    json(body: ResBody): Response<ResBody>;
+    status(code: number): Response<ResBody>;
+    send(body?: any): Response<ResBody>;
   }
 
   export type NextFunction = (error?: any) => void;
@@ -21,21 +21,20 @@ declare module "express" {
     get(path: string, ...handlers: RequestHandler[]): Router;
     post(path: string, ...handlers: RequestHandler[]): Router;
     patch(path: string, ...handlers: RequestHandler[]): Router;
+    delete(path: string, ...handlers: RequestHandler[]): Router;
   }
 
-  export interface Application {
-    use(...handlers: any[]): Application;
-    get(path: string, ...handlers: RequestHandler[]): Application;
-    post(path: string, ...handlers: RequestHandler[]): Application;
-    patch(path: string, ...handlers: RequestHandler[]): Application;
+  export interface Application extends Router {
     listen(port: number, callback?: () => void): any;
   }
 
   export interface ExpressStatic {
     (): Application;
     Router(): Router;
-    json(): any;
+    json(): RequestHandler;
   }
+
+  export function Router(): Router;
 
   const express: ExpressStatic;
   export default express;
