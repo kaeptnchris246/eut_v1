@@ -7,14 +7,22 @@ import { validateRequest } from "../utils/validator.js";
 const router = Router();
 
 router.get("/", authenticate, getFunds);
-router.get(
+router.get<{ id: string }>(
   "/:id",
   authenticate,
   validateRequest({ params: z.object({ id: z.string().uuid() }) }),
   getFund,
 );
 
-router.post(
+router.post<Record<string, any>, any, {
+  code: string;
+  name: string;
+  description?: string;
+  currency?: string;
+  targetAmount: number;
+  minCommitment: number;
+  status?: string;
+}>(
   "/",
   authenticate,
   requireRole(["admin"]),

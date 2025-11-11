@@ -25,14 +25,14 @@ router.post(
   reserveCommitment,
 );
 
-router.patch(
+router.patch<{ id: string }>(
   "/:id/confirm",
   authenticate,
   validateRequest({ params: z.object({ id: z.string().uuid() }) }),
   confirmMyCommitment,
 );
 
-router.patch(
+router.patch<{ id: string }>(
   "/:id/cancel",
   authenticate,
   validateRequest({ params: z.object({ id: z.string().uuid() }) }),

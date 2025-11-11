@@ -11,9 +11,15 @@ export const getMyWallets = async (req: AuthenticatedRequest, res: Response, nex
   }
 };
 
-export const addWallet = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+type AddWalletBody = { address?: string; chain?: string };
+
+export const addWallet = async (
+  req: AuthenticatedRequest<AddWalletBody>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const { address, chain } = req.body as { address?: string; chain?: string };
+    const { address, chain } = req.body;
     const wallet = await createWallet({
       userId: req.user!.id,
       address,

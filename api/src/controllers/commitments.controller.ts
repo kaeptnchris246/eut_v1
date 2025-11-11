@@ -11,9 +11,16 @@ export const getMyCommitments = async (req: AuthenticatedRequest, res: Response,
   }
 };
 
-export const reserveCommitment = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+type ReserveCommitmentBody = { fundId: string; amount: number };
+type CommitmentParams = { id: string };
+
+export const reserveCommitment = async (
+  req: AuthenticatedRequest<ReserveCommitmentBody>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const { fundId, amount } = req.body as { fundId: string; amount: number };
+    const { fundId, amount } = req.body;
     const commitment = await createCommitment({
       fundId,
       amount,
@@ -25,9 +32,13 @@ export const reserveCommitment = async (req: AuthenticatedRequest, res: Response
   }
 };
 
-export const confirmMyCommitment = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const confirmMyCommitment = async (
+  req: AuthenticatedRequest<Record<string, unknown>, CommitmentParams>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const { id } = req.params as { id: string };
+    const { id } = req.params;
     const commitment = await confirmCommitment({
       commitmentId: id,
       userId: req.user!.id,
@@ -38,9 +49,13 @@ export const confirmMyCommitment = async (req: AuthenticatedRequest, res: Respon
   }
 };
 
-export const cancelMyCommitment = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const cancelMyCommitment = async (
+  req: AuthenticatedRequest<Record<string, unknown>, CommitmentParams>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const { id } = req.params as { id: string };
+    const { id } = req.params;
     const commitment = await cancelCommitment({
       commitmentId: id,
       userId: req.user!.id,

@@ -8,9 +8,13 @@ export interface AuthenticatedUser {
   role: string;
 }
 
-export interface AuthenticatedRequest extends Request {
+export type AuthenticatedRequest<
+  TBody = Record<string, unknown>,
+  TParams = Record<string, string>,
+  TQuery = Record<string, unknown>,
+> = Request<TParams, any, TBody, TQuery> & {
   user?: AuthenticatedUser;
-}
+};
 
 export const authenticate = (req: AuthenticatedRequest, _res: Response, next: NextFunction) => {
   const header = req.headers.authorization;

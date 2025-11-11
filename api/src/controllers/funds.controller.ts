@@ -10,7 +10,22 @@ export const getFunds = async (_req: Request, res: Response, next: NextFunction)
   }
 };
 
-export const getFund = async (req: Request, res: Response, next: NextFunction) => {
+type FundParams = { id: string };
+type CreateFundBody = {
+  code: string;
+  name: string;
+  description?: string;
+  currency?: string;
+  targetAmount: number;
+  minCommitment: number;
+  status?: string;
+};
+
+export const getFund = async (
+  req: Request<FundParams>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const fund = await getFundById(req.params.id);
     return res.json({ fund });
@@ -19,7 +34,11 @@ export const getFund = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export const addFund = async (req: Request, res: Response, next: NextFunction) => {
+export const addFund = async (
+  req: Request<Record<string, string>, any, CreateFundBody>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { code, name, description, currency, targetAmount, minCommitment, status } = req.body;
     const fund = await createFund({
