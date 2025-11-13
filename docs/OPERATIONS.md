@@ -67,6 +67,7 @@ npm run dev
 
 - Vite dev server on **http://localhost:5173**.
 - The frontend reads `VITE_API_BASE_URL` from `.env`. In dev it should be `http://localhost:8080`.
+- Wallet connectivity relies on the EVM variables in `.env` (`VITE_CHAIN_ID`, `VITE_RPC_URL`, `VITE_TOKEN_ADDRESS`, optional `VITE_WALLETCONNECT_PROJECT_ID`). Populate these before testing WalletConnect/ethers features. The wallet layer loads SDKs from a CDN at runtime, so outbound HTTPS access is required when connecting wallets.
 - Any API errors appear both in the browser console and terminal running the API.
 
 To sign in, use the seeded accounts (see section 4).

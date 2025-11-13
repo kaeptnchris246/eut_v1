@@ -4,7 +4,7 @@ The EUT platform delivers an end-to-end workflow for investors and administrator
 
 ## Architecture at a Glance
 
-- **Frontend:** Vite, React 18, Tailwind CSS, shadcn/ui components, Zustand (auth store), React Query (data fetching).
+- **Frontend:** Vite, React 18, Tailwind CSS, shadcn/ui components, Zustand (auth store), custom wallet context + ethers.js for token interactions.
 - **Backend API:** Node.js 20, Express, TypeScript, Zod validation, JWT auth, Swagger docs, Postgres (via `pg`).
 - **Database:** Postgres schema aligned with Supabase (users, funds, commitments, transactions, wallets). Seeds include demo admin/investor accounts and the GREENWAVE fund.
 - **Infrastructure:** Dockerfiles for API & web, Docker Compose for local orchestration, GitHub Actions CI (builds API + frontend).
@@ -71,6 +71,15 @@ Both accounts are created by `db/seed.sql` during the first database boot.
 | `CORS_ORIGIN` | Comma separated list of allowed origins for CORS |
 | `SUPABASE_*` | Placeholders for future Supabase integration |
 | `VITE_API_BASE_URL` | Base URL for frontend API calls |
+| `VITE_CHAIN_ID` | Target EVM chain ID for wallet connections |
+| `VITE_CHAIN_NAME` / `VITE_CHAIN_SYMBOL` | Optional overrides for custom chains |
+| `VITE_RPC_URL` | HTTPS RPC endpoint used for read operations |
+| `VITE_TOKEN_ADDRESS` | ERC-20 token contract address |
+| `VITE_TOKEN_DECIMALS` | Token decimals (default 18) |
+| `VITE_WALLETCONNECT_PROJECT_ID` | WalletConnect v2 project ID (leave empty to disable) |
+
+> ℹ️ The DApp lazily loads `ethers`, WalletConnect, and Coinbase Wallet SDKs from a CDN at runtime. Ensure outbound HTTPS access is
+> available in environments where wallet connectivity is required.
 
 ## API surface
 
@@ -108,10 +117,14 @@ eut_v1/
 ├── db/                       # Database schema & seeds
 ├── docs/                     # Operations & deployment guides
 ├── src/                      # React frontend
-│   ├── components/           # Layout, table, protected routes, ui
+│   ├── components/           # Layout, wallet connector, table, protected routes, ui
+│   ├── contracts/            # On-chain ABI files
+│   ├── hooks/                # Wallet + token hooks
 │   ├── pages/                # Login, Dashboard, Funds, FundDetail, AdminFunds
-│   ├── services/             # API client and auth helpers
-│   └── store/                # Zustand auth store
+│   ├── providers/            # Wallet provider configuration
+│   ├── services/             # API client and smart-contract helpers
+│   ├── store/                # Zustand auth store
+│   └── utils/                # Shared helpers (e.g., wallet formatting)
 ├── Dockerfile.api            # Production API image
 ├── Dockerfile.web            # Production web image
 ├── docker-compose.yml        # Dev orchestration (db + api + web)

@@ -51,6 +51,13 @@ Set:
 - `DATABASE_URL` – keep default if using compose-provisioned Postgres.
 - `CORS_ORIGIN` – include your production domain (`https://app.example.com`).
 - `VITE_API_BASE_URL` – e.g. `https://api.example.com` if using a reverse proxy.
+- `VITE_CHAIN_ID` / `VITE_CHAIN_NAME` / `VITE_CHAIN_SYMBOL` – chain metadata for wallet connections (e.g. Sepolia testnet).
+- `VITE_RPC_URL` – HTTPS RPC endpoint for chain reads (Infura/Alchemy/custom node).
+- `VITE_TOKEN_ADDRESS` – deployed ERC-20 (or ERC-1400) contract address.
+- `VITE_WALLETCONNECT_PROJECT_ID` – project ID to enable WalletConnect (leave blank to disable QR modal).
+
+Wallet integrations (ethers, WalletConnect, Coinbase Wallet SDK) are loaded from CDN modules at runtime; confirm that the server
+can reach public HTTPS endpoints if wallet functionality is required in production.
 
 For production, keep `.env` readable by deployment user only: `chmod 600 .env`.
 
